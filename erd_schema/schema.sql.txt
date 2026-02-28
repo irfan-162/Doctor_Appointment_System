@@ -1,0 +1,103 @@
+
+CREATE TABLE doctor (
+    doctor_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    specialization VARCHAR(100),
+    phone VARCHAR(20),
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE patient (
+    patient_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    age INT CHECK (age > 0),
+    gender VARCHAR(10),
+    phone VARCHAR(20),
+    blood_group VARCHAR(5),
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(255)
+);
+
+
+CREATE TABLE schedule (
+    schedule_id SERIAL PRIMARY KEY,
+    doctor_id INT NOT NULL,
+    day VARCHAR(15) NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    CONSTRAINT fk_schedule_doctor
+        FOREIGN KEY (doctor_id)
+        REFERENCES doctor(doctor_id)
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE appointment (
+    appointment_id SERIAL PRIMARY KEY,
+    appointment_date DATE NOT NULL,
+    appointment_time TIME NOT NULL,
+    status VARCHAR(30),
+    doctor_id INT NOT NULL,
+    patient_id INT NOT NULL,
+    schedule_id INT NOT NULL,
+    CONSTRAINT fk_app_doctor
+        FOREIGN KEY (doctor_id)
+        REFERENCES doctor(doctor_id),
+    CONSTRAINT fk_app_patient
+        FOREIGN KEY (patient_id)
+        REFERENCES patient(patient_id),
+    CONSTRAINT fk_app_schedule
+        FOREIGN KEY (schedule_id)
+        REFERENCES schedule(schedule_id)
+);
+
+CREATE TABLE medical_record (
+    record_id SERIAL PRIMARY KEY,
+    diagnosis TEXT,
+    notes TEXT,
+    appointment_id INT UNIQUE NOT NULL,
+    CONSTRAINT fk_record_appointment
+        FOREIGN KEY (appointment_id)
+        REFERENCES appointment(appointment_id)
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE treatment (
+    treatment_id SERIAL PRIMARY KEY,
+    treatment_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    cost NUMERIC(10,2),
+    record_id INT NOT NULL,
+    CONSTRAINT fk_treatment_record
+        FOREIGN KEY (record_id)
+        REFERENCES medical_record(record_id)
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE prescription (
+    prescription_id SERIAL PRIMARY KEY,
+    medicine_name VARCHAR(100) NOT NULL,
+    dosage VARCHAR(50),
+    duration VARCHAR(50),
+    record_id INT NOT NULL,
+    CONSTRAINT fk_prescription_record
+        FOREIGN KEY (record_id)
+        REFERENCES medical_record(record_id)
+        ON DELETE CASCADE
+);
+
+
+CREATE TABLE bill (
+    bill_id SERIAL PRIMARY KEY,
+    amount NUMERIC(10,2) NOT NULL,
+    payment_status VARCHAR(30),
+    bill_date DATE DEFAULT CURRENT_DATE,
+    appointment_id INT UNIQUE NOT NULL,
+    CONSTRAINT fk_bill_appointment
+        FOREIGN KEY (appointment_id)
+        REFERENCES appointment(appointment_id)
+);

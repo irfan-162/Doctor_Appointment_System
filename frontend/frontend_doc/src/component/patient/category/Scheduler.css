@@ -1,0 +1,100 @@
+.scheduler-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  width: 100%;
+  color: #8e8171;
+  background-color: #EFE9E3;
+}
+
+.scheduler-card {
+  background: #EFE9E3;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+  
+  text-align: center;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+input, select {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #374151;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  
+  outline-color: #537D96;
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #537D96;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.submit-btn:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.submit-btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.input-field {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 2px solid #8e8171;
+  border-radius: 10px;
+  background-color: #EFE9E3;
+  color: #8e8171;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+/* Placeholder color */
+.input-field::placeholder {
+  color: #8e8171;
+  opacity: 0.7;
+}
+
+/* Focus effect */
+.input-field:focus {
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(142, 129, 113, 0.25);
+}

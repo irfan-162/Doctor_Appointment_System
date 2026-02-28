@@ -1,0 +1,95 @@
+/* Full page container */
+.appointments-container {
+  height: 100vh;           /* full viewport height */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  width: 100%;
+}
+
+/* Page title */
+.title {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* Table container */
+.appointments-table {
+  display: flex;
+  flex-direction: column;
+  height: 100%;            /* fill remaining height */
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+/* Table header */
+.table-header {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr 1fr 1fr 0.8fr;
+  padding: 14px 16px;
+  background-color: #dbd4cd;
+  font-weight: 600;
+  font-size: 14px;
+  color: #444;
+  position: sticky;       /* sticky header */
+  top: 0;
+  z-index: 2;
+}
+
+/* Scrollable body */
+.table-body {
+  overflow-y: auto;
+  flex: 0.8;                /* take remaining height */
+}
+
+/* Table rows */
+.table-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr 1fr 1fr 0.8fr;
+  padding: 12px 16px;
+  align-items: center;
+  font-size: 14px;
+  border-top: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+.table-row:hover {
+  background-color: #fafafa;
+}
+
+/* Cancel button */
+.cancel-btn {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #BF4646;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background-color: #ff4d4f;
+}
+
+/* Status messages */
+.status {
+  text-align: center;
+  margin-top: 60px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Scrollbar styling (optional) */
+.table-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.table-body::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 10px;
+}

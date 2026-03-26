@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MdEdit, MdSend } from "react-icons/md";
+import PatientVisitsChart from "./PatientVisitsChart";
 
 export default function Profile() {
   const [patient, setPatient] = useState(null);
@@ -171,6 +172,7 @@ export default function Profile() {
           </div>
         ))}
       </div>
+      <PatientVisitsChart/>
     </div>
   );
 }

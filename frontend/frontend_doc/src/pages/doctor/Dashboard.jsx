@@ -16,14 +16,20 @@ import PatientList from '../../component/doctor/PatientList'
 export default function DoctortDashboard(){
   
 
-  const [patient, setPatient] = useState(null)
-
+  const [doctor, setDoctor] = useState(" ")
+  const token = localStorage.getItem("token")
   useEffect(()=>{
-    fetch("http://localhost:3001/api/patient/profile?id=3")
+    fetch("http://localhost:3001/api/doctor/profile",{
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+    })
       .then(res => res.json())
       .then(data => {
         console.log(data)
-        setPatient(data)
+        setDoctor(data);
       })
       .catch(err => console.log(err))
   }, [])
@@ -71,7 +77,7 @@ export default function DoctortDashboard(){
     <div className="top">
       <h2>
         Hello,<br/>
-        <div className='top-name'>{patient?.name}</div>
+        <div className='top-name'>{doctor?.name}</div>
       </h2>
     </div>
 

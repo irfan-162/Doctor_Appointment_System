@@ -14,6 +14,57 @@ exports.fetchProfile = async (id) => {
   return info.rows[0];
 };
 
+export const getWeeklyVisitsService = async (doctorId) => {
+  try {
+    const query = `
+      WITH weeks AS (
+        SELECT generate_series(
+          DATE_TRUNC('week', CURRENT_DATE) - INTERVAL '7 weeks',
+          DATE_TRUNC('week', CURRENT_DATE),
+          INTERVAL '1 week'
+        ) AS week
+      )
+      SELECT 
+        w.week,
+        COALESCE(COUNT(a.appointment_id), 0) AS total_visits
+      FROM weeks w
+      LEFT JOIN appointment a
+        ON DATE_TRUNC('week', a.appointment_date) = w.week
+        AND a.doctor_id = $1
+      GROUP BY w.week
+      ORDER BY w.week;
+    `[doctorId]
+    ;
+
+    const result = await db.query(query, [doctorId]);
+
+    // 🔥 Format for frontend (optional but recommended)
+    const formatted = result.rows.map(row => ({
+      week: row.week.toISOString().split("T")[0], // YYYY-MM-DD
+      total: Number(row.total_visits)
+    }));
+
+    return formatted;
+
+  } catch (err) {
+    console.error("Error fetching weekly visits:", err);
+    throw err;
+  }
+};
+
+exports.fetchSchedule = async (id) => {
+  const info = await db.query(
+    `
+SELECT schedule_id as id,start_time as start , end_time as end , day
+FROM schedule
+where doctor_id = $1
+    `,
+    [id]
+  );
+  console.log(info.rows);
+  return info.rows;
+};
+
 exports.updateProfile = async (req,res) => {
   const { id, field, value } = req.body;
 
@@ -25,6 +76,24 @@ exports.updateProfile = async (req,res) => {
       [value, id]
     );
     res.json({ message: "doctor updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.addSchedule = async (req,res) => {
+  const { day, start, end } = req.body;
+  const docID = req.user.doctor_id;
+  console.log(day, start, end, docID);
+  try {
+
+    await db.query(
+      `INSERT INTO SCHEDULE(doctor_id, day, start_time, end_time) 
+      VALUES ($1, $2, $3, $4)`,
+      [docID, day, start, end]
+    );
+    res.status(200)
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error" });

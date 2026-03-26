@@ -65,6 +65,8 @@ try {
 }
 };
 
+
+
 exports.editProfile = async(req,res) =>{
   console.log("updating profile");
 try {
@@ -72,6 +74,40 @@ try {
     res.status(200).json(result);
 } catch (error) {
   res.status(500).json({error : "Failed to update profile infos"})
+}
+};
+
+export const getWeeklyVisits = async (req, res) => {
+  try {
+    const doctorId = req.user.doctor_id; 
+
+    const data = await doctorService.getWeeklyVisitsService(doctorId);
+
+    res.json(data);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch weekly visits" });
+  }
+};
+
+exports.getSchedule = async(req,res) =>{
+  console.log("gettingschedule in controller for doctor  " + req.user.doctor_id);
+try {
+    const result = await doctorService.fetchSchedule(req.user.doctor_id);
+    res.status(200).json(result);
+} catch (error) {
+  res.status(500).json({error : "Failed to fetch profile infos"})
+}
+};
+
+exports.postSchedule = async(req,res) =>{
+  console.log("posting schedule in controller for doctor");
+try {
+    const result = await doctorService.addSchedule(req,res);
+    res.status(200).json(result);
+} catch (error) {
+  res.status(500).json({error : "Failed to fetch profile infos"})
 }
 };
 
@@ -113,5 +149,29 @@ exports.createConsultation = async (req, res) => {
     res.status(500).json({
       error: "Failed to save consultation"
     });
+  }
+};
+
+exports.deleteSchedule = async (req, res) => {
+  const { id } = req.params;
+ console.log(id);
+  try {
+    const result = await db.query(
+      `DELETE FROM schedule WHERE schedule_id = $1 RETURNING *`,
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Schedule not found" });
+    }
+
+    res.status(200).json({
+      message: "Schedule deleted successfully",
+      data: result.rows[0],
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete schedule" });
   }
 };

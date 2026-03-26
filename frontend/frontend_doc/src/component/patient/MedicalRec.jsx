@@ -29,7 +29,6 @@ const MedicalRec = () => {
     setapptID(appointment.aid)
     setisList(false);
     setisPres(true);
-    // later you can navigate or open modal here
   };
 
   function ListView (){

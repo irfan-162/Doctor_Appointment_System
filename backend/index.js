@@ -5,6 +5,7 @@ const express = require('express');
 
 //local module
 const patientRouter = require('./src/routes/patientRouter');
+const doctorRouter = require('./src/routes/doctorRouter');
 
 //middleware
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 
 //routing
 app.use('/api/patient',patientRouter);
+app.use('/api/doctor',doctorRouter);
 
 const PORT = 3001;
 app.listen(PORT,()=>{

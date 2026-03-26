@@ -128,6 +128,7 @@ try {
   res.status(500).json({error : "Failed to fetch profile infos"})
 }
 };
+
 exports.getScheduleID = async(req,res) =>{
   console.log("getting schedule id");
 try {

@@ -1,0 +1,91 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import "./PatientList.css";
+import DiagnosisForm from "./DiagnosisForm";
+
+export default function PatientList() {
+  const [patients, setPatients] = useState([]);
+  const [loading,  setLoading]  = useState(true);
+  const navigate = useNavigate();
+
+  /* ── Load patients ── */
+  useEffect(() => {
+    const load = async () => {
+      setLoading(true);
+      try {
+        // --- API REQUEST (GET patients list) ---
+        const res  = await fetch('http://localhost:3001/api/doctor/patients?id=2');
+        const data = await res.json();
+        setPatients(data);
+        console.log("Loaded patients:", patients);
+        console.log("Loaded data:", data);
+
+        await new Promise(r => setTimeout(r, 500));
+      } catch (err) {
+        console.error("Failed to load patients:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+  }, []);
+
+  const goHistory  = (id) => navigate(`/medHis/${id}`);
+  const goPresribe = (id) => navigate(`/DiagnosisForm/${id}`);
+
+  return (
+    <div className="pl-app">
+      <div className="pl-header">
+        <h1>Patient <span>List</span></h1>
+        {!loading && (
+          <span className="pl-count">{patients.length} patients</span>
+        )}
+      </div>
+
+      <div className="pl-body">
+        {loading && (
+          <div className="pl-empty">Loading patients…</div>
+        )}
+
+        {!loading && patients.length === 0 && (
+          <div className="pl-empty">No patients found.</div>
+        )}
+
+        {!loading && patients.length > 0 && (
+          <table className="pl-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {patients.map(p => (
+                <tr key={p.id}>
+                  <td className="td-name">{p.name}</td>
+                  <td>
+                    <span className={`gender-badge ${p.gender}`}>
+                      {p.gender}
+                    </span>
+                  </td>
+                  <td className="td-actions">
+                    <div className="action-group">
+                      <button
+                        className="btn-prescribe"
+                        onClick={() => goPresribe(p.id)}
+                      >
+                        Prescribe
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  );
+}

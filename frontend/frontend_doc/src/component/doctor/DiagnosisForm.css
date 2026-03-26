@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+.dx-app {
+  height: 95vh;
+  width: 100%;
+  border-radius: 10px;
+  margin: 1rem;
+  max-height: 100vh;
+  overflow: hidden;
+  background: #f7f7f5;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: #1a1a1a;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.dx-header {
+  padding: 20px 32px;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+}
+
+.dx-header h1 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #888;
+}
+
+.dx-header h1 span { color: #1a1a1a; }
+
+.save-btn {
+  padding: 8px 20px;
+  background: #8e8171;
+  color: #f7f7f5;
+  border: none;
+  border-radius: 4px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.save-btn:hover { background: #a79e93; }
+.save-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+/* LOADING / ERROR */
+.dx-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  color: #aaa;
+}
+
+/* BODY */
+.dx-body {
+  display: flex;
+  flex: 1;
+  gap: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* LEFT — Appointment Info */
+.dx-left {
+  width: 260px;
+  min-width: 260px;
+  border-right: 1px solid #e0e0e0;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #fff;
+  overflow-y: auto;
+}
+
+.apt-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.apt-row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.apt-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+
+.apt-value {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.apt-divider {
+  border: none;
+  border-top: 1px solid #ececec;
+}
+
+.status-badge {
+  display: inline-block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 3px;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* RIGHT — Form */
+.dx-right {
+  flex: 1;
+  padding: 24px 28px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-height: 0;
+}
+
+/* SECTION */
+.dx-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #999;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+textarea,
+input[type="text"],
+input[type="number"],
+select {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  color: #1a1a1a;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 9px 11px;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+  border-color: #1a1a1a;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.5;
+}
+
+/* MEDICINES */
+.medicine-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.medicine-row {
+  display: grid;
+  grid-template-columns: 1fr 120px 90px 32px;
+  gap: 8px;
+  align-items: center;
+  animation: fadeIn 0.18s ease;
+}
+
+/* TREATMENTS */
+.treatment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.treatment-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 32px;
+  gap: 8px;
+  align-items: start;
+  animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ADD ROW BUTTON */
+.add-row-btn {
+  align-self: flex-start;
+  background: none;
+  border: 1px dashed #ccc;
+  color: #999;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.add-row-btn:hover {
+  border-color: #1a1a1a;
+  color: #1a1a1a;
+}
+
+/* REMOVE BUTTON */
+.rm-btn {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.15s;
+  text-align: center;
+}
+
+.rm-btn:hover { color: #c0392b; }
+
+/* COL LABELS */
+.col-labels {
+  display: grid;
+  gap: 8px;
+  margin-bottom: -4px;
+}
+
+.col-labels.medicine-labels {
+  grid-template-columns: 1fr 120px 90px 32px;
+}
+
+.col-labels.treatment-labels {
+  grid-template-columns: 160px 1fr 32px;
+}
+
+.col-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #bbb;
+}

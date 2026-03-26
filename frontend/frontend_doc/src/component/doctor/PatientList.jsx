@@ -13,26 +13,43 @@ export default function PatientList() {
     const load = async () => {
       setLoading(true);
       try {
+        const token = localStorage.getItem("token"); // get token from localStorage
+        if (!token) {
+          console.error("No token found, please login");
+          return;
+        }
+  
         // --- API REQUEST (GET patients list) ---
-        const res  = await fetch('http://localhost:3001/api/doctor/patients?id=2');
+        const res = await fetch(`http://localhost:3001/api/doctor/patients`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`, // send token
+          },
+        });
+  
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+  
         const data = await res.json();
         setPatients(data);
-        console.log("Loaded patients:", patients);
-        console.log("Loaded data:", data);
-
-        await new Promise(r => setTimeout(r, 500));
+        console.log("Loaded patients data:", data);
+  
+        await new Promise((r) => setTimeout(r, 500)); // optional delay
       } catch (err) {
         console.error("Failed to load patients:", err);
       } finally {
         setLoading(false);
       }
     };
-
+  
     load();
   }, []);
 
-  const goHistory  = (id) => navigate(`/medHis/${id}`);
-  const goPresribe = (id) => navigate(`/DiagnosisForm/${id}`);
+
+
+  const goPresribe = (id) => navigate(`doctordashboard/DiagnosisForm/${id}`);
 
   return (
     <div className="pl-app">

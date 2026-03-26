@@ -38,7 +38,7 @@ exports.fetchPatient = async (id) => {
     FROM appointment a
     JOIN patient p
     ON a.patient_id = p.patient_id
-    WHERE a.doctor_id = $1 and a.status = 'Pending'
+    WHERE a.doctor_id = $1
     `,
     [id]
   );
@@ -72,7 +72,6 @@ WHERE a.doctor_id = $1 AND a.appointment_id = $2
 exports.createConsultationService = async (payload) => {
 
   const { appointmentId, diagnosis, notes, medicines, treatments } = payload;
-  console.log('this test '+appointmentId );
   try {
     await db.query("BEGIN");
 

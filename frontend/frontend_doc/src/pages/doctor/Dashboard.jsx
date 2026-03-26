@@ -1,6 +1,6 @@
 import './style.css'
 import { useEffect, useState } from 'react'
-import { NavLink, Routes, Route,Link } from "react-router-dom"
+import { NavLink, Routes, Route,Link , Outlet } from "react-router-dom"
 import { MdEvent } from "react-icons/md";
 import { FaUser, FaFileMedical, FaCreditCard } from "react-icons/fa"
 import { MdDashboard, MdEventAvailable, MdAddCircle } from "react-icons/md"
@@ -14,6 +14,7 @@ import ScheduleManagement from '../../component/doctor/ScheduleManagement'
 import PatientList from '../../component/doctor/PatientList'
 
 export default function DoctortDashboard(){
+  
 
   const [patient, setPatient] = useState(null)
 
@@ -37,7 +38,7 @@ export default function DoctortDashboard(){
       <MdDashboard/> Dashboard
     </h4>
 
-    <NavLink to="/" className="mList">
+    <NavLink to="profile" className="mList">
       <FaUser className='icon'/> 
       <p>Profile</p>
     </NavLink>
@@ -75,23 +76,9 @@ export default function DoctortDashboard(){
     </div>
 
     <div className="bottom">
-
-      <Routes>
-
-        <Route path="/" element={<DoctorProfile/>} />
-
-        <Route path="schedulemanagement" element={<ScheduleManagement/>} />
-
-        <Route path="PatientList" element={<PatientList/>} />
-
-        <Route path="records" element={<MedicalRec/>} />
-
-        <Route path="billing" element={<PaymentLists/>} />
-        <Route path="/DiagnosisForm/:appID" element={<DiagnosisForm />} />
-
-      </Routes>
-
-    </div>
+          {/* Nested pages render here */}
+          <Outlet /> 
+        </div>
 
   </div>
 

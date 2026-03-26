@@ -6,13 +6,25 @@ export default function Profile() {
   const [editingField, setEditingField] = useState(null);
   const [fieldValues, setFieldValues] = useState({});
   const [errors, setErrors] = useState({});
+  const token = localStorage.getItem("token");
 
   const genderOptions = ["Cardiologist", "Orthopedic", "Medicine"];
 
   // Fetch patient data
-  useEffect(() => {
-    fetch("http://localhost:3001/api/doctor/profile?id=2")
-      .then((res) => res.json())
+  useEffect(() => {  
+    fetch("http://localhost:3001/api/doctor/profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` // attach token here
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Unauthorized or server error");
+        }
+        return res.json();
+      })
       .then((data) => {
         setPatient(data);
         setFieldValues({
@@ -58,10 +70,13 @@ export default function Profile() {
       try {
         const res = await fetch("http://localhost:3001/api/doctor/update", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}` // <-- add this
+          },
           body: JSON.stringify({
-            id: 2,           
-            field: field,    
+            id: 2,
+            field: field,
             value: updatedValue,
           }),
         });

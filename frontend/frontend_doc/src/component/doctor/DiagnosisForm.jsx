@@ -18,6 +18,7 @@ export default function DiagnosisForm() {
   const [medicines,   setMedicines]   = useState([mkMed()]);
   const [treatments,  setTreatments]  = useState([mkTreat()]);
   const { appID } = useParams();
+  const token = localStorage.getItem("token");
   console.log(appID);
 
   /* ── Load current appointment ── */
@@ -26,7 +27,14 @@ export default function DiagnosisForm() {
       setLoading(true);
       try {
        
-        const res  = await fetch(`http://localhost:3001/api/doctor/patientinfo?docID=2&appID=${appID}`);
+        const res  = await fetch(`http://localhost:3001/api/doctor/patientinfo?appID=${appID}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            }
+          }
+        );
         const data = await res.json();
         setAppointment(data);
 
@@ -59,7 +67,10 @@ export default function DiagnosisForm() {
       // --- API REQUEST (POST save diagnosis) 
       const res = await fetch("http://localhost:3001/api/doctor/consultation", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+           "Content-Type": "application/json" ,
+           "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error("Save failed");

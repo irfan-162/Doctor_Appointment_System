@@ -10,14 +10,14 @@ const CustomTooltip = ({ active, payload, label }) => {
   return (
     <div style={{
       background: "#fff",
-      border: "1px solid #e0e0e0",
+      border: "1px solid #8e8171",
       borderRadius: 4,
       padding: "8px 12px",
       fontFamily: "'IBM Plex Mono', monospace",
       fontSize: 12,
-      color: "#1a1a1a",
+      color: "#8e8171",
     }}>
-      <div style={{ color: "#aaa", fontSize: 10, marginBottom: 2 }}>{label}</div>
+      <div style={{ color: "#8e8171", fontSize: 10, marginBottom: 2 }}>{label}</div>
       <div>{payload[0].value} patients</div>
     </div>
   );
@@ -25,26 +25,38 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export default function PatientVisitsChart() {
   
-  const [data,setData] = useState([]);
-
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     const load = async () => {
-      const res  = await fetch("http://localhost:3001/api/doctor/weekly-visits",{
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-      });
-      const data = await res.json();
-      const text = await res.text();
-console.log("RESPONSE:", text);
-      setData(data);
-      console.log(data);
+      try {
+        const res = await fetch("http://localhost:3001/api/doctor/weekly-visits", {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+          },
+        });
+  
+        const text = await res.text();
+        console.log("RAW RESPONSE:", text);
+  
+        if (!res.ok) {
+          throw new Error("Failed to fetch");
+        }
+  
+        const result = JSON.parse(text);
+  
+        console.log("Parsed result:", result);
+  
+        setData(Array.isArray(result) ? result : []);
+  
+      } catch (err) {
+        console.error("Fetch error:", err.message);
+        setData([]);
+      }
     };
-
-    load();
+  
+    load(); // 🔥 IMPORTANT
   }, []);
 
 
@@ -53,7 +65,7 @@ console.log("RESPONSE:", text);
       width: 500,
       height: 300,
       background: "#fff",
-      border: "1px solid #e0e0e0",
+      border: "1px solid #8e8171",
       borderRadius: 6,
       padding: "20px 16px 12px",
       fontFamily: "'IBM Plex Sans', sans-serif",
@@ -66,12 +78,12 @@ console.log("RESPONSE:", text);
           fontSize: 10,
           letterSpacing: "0.12em",
           textTransform: "uppercase",
-          color: "#aaa",
+          color: "#8e8171",
           marginBottom: 2,
         }}>
           Weekly
         </div>
-        <div style={{ fontSize: 13, fontWeight: 500, color: "#1a1a1a" }}>
+        <div style={{ fontSize: 13, fontWeight: 500, color: "#8e8171" }}>
           Patient Visits Over Time
         </div>
       </div>
@@ -82,23 +94,23 @@ console.log("RESPONSE:", text);
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
           <XAxis
             dataKey="week"
-            tick={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fill: "#bbb" }}
+            tick={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fill: "#8e8171" }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
-            tick={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fill: "#bbb" }}
+            tick={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, fill: "#8e8171" }}
             axisLine={false}
             tickLine={false}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#e0e0e0" }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#8e8171" }} />
           <Line
             type="monotone"
-            dataKey="visits"
-            stroke="#1a1a1a"
+            dataKey="total"
+            stroke="#8e8171"
             strokeWidth={2}
-            dot={<Dot r={3} fill="#1a1a1a" strokeWidth={0} />}
-            activeDot={{ r: 5, fill: "#1a1a1a", strokeWidth: 0 }}
+            dot={<Dot r={3} fill="#8e8171" strokeWidth={0} />}
+            activeDot={{ r: 5, fill: "#8e8171", strokeWidth: 0 }}
           />
         </LineChart>
       </ResponsiveContainer>

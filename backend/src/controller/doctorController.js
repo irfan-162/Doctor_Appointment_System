@@ -77,7 +77,7 @@ try {
 }
 };
 
-export const getWeeklyVisits = async (req, res) => {
+exports.getWeeklyVisits = async (req, res) => {
   try {
     const doctorId = req.user.doctor_id; 
 

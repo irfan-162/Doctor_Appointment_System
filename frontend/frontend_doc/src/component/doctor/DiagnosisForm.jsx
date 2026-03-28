@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 
 import "./DiagnosisForm.css";
 
@@ -9,6 +9,8 @@ const mkMed = () => ({ id: Date.now() + Math.random(), name: "", dosage: "Once d
 const mkTreat = () => ({ id: Date.now() + Math.random(), name: "", description: "" });
 
 export default function DiagnosisForm() {
+  const navigate = useNavigate();
+
   const [appointment, setAppointment] = useState(null);
   const [loading, setLoading]         = useState(true);
   const [saving, setSaving]           = useState(false);
@@ -78,6 +80,7 @@ export default function DiagnosisForm() {
       console.log("Saving payload:", payload); 
       await new Promise(r => setTimeout(r, 500)); // mock delay
       alert("Saved successfully.");
+      navigate("/doctordashboard/PatientList");
     } catch (err) {
       console.error("Failed to save:", err);
       alert("Failed to save. Please try again.");

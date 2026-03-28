@@ -59,10 +59,6 @@ export default function DoctortDashboard(){
       <span>Patient Management</span>
     </NavLink>
 
-    <NavLink to="records" className="mList">
-      <FaFileMedical className='icon'/> 
-      <p>Medical Records</p>
-    </NavLink>
 
     <NavLink to="billing" className="mList">
       <FaCreditCard className='icon'/> 

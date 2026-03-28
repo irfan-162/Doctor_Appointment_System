@@ -14,7 +14,7 @@ exports.fetchProfile = async (id) => {
   return info.rows[0];
 };
 
-export const getWeeklyVisitsService = async (doctorId) => {
+exports.getWeeklyVisitsService = async (doctorId) => {
   try {
     const query = `
       WITH weeks AS (
@@ -33,17 +33,14 @@ export const getWeeklyVisitsService = async (doctorId) => {
         AND a.doctor_id = $1
       GROUP BY w.week
       ORDER BY w.week;
-    `[doctorId]
-    ;
-
+    `;
     const result = await db.query(query, [doctorId]);
 
-    // 🔥 Format for frontend (optional but recommended)
     const formatted = result.rows.map(row => ({
       week: row.week.toISOString().split("T")[0], // YYYY-MM-DD
       total: Number(row.total_visits)
     }));
-
+    console.log(formatted);
     return formatted;
 
   } catch (err) {
@@ -107,7 +104,7 @@ exports.fetchPatient = async (id) => {
     FROM appointment a
     JOIN patient p
     ON a.patient_id = p.patient_id
-    WHERE a.doctor_id = $1
+    WHERE a.doctor_id = $1 and a.status = 'Pending'
     `,
     [id]
   );
@@ -139,7 +136,6 @@ WHERE a.doctor_id = $1 AND a.appointment_id = $2
 };
 
 exports.createConsultationService = async (payload) => {
-
   const { appointmentId, diagnosis, notes, medicines, treatments } = payload;
   try {
     await db.query("BEGIN");
@@ -179,19 +175,13 @@ exports.createConsultationService = async (payload) => {
        WHERE appointment_id = $1`,
       [appointmentId]
     );
-    await db.query(`
-      UPDATE appointment
-      SET status = 'Done'
-      WHERE appointment_id = $1;
-      `
-      [appointmentId]
-    );
+
     await db.query("COMMIT");
 
     return { recordId };
 
-  } catch (error) {
+  } catch (err) {
     await db.query("ROLLBACK");
-    throw error;
+    throw err;
   }
 };

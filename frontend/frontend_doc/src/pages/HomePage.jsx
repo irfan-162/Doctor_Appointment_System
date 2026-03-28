@@ -33,7 +33,7 @@ function LoginForm({ role }) {
       localStorage.setItem("token", data.token);
 
       // Mock — remove when API is connected
-      navigate(role === "doctor" ? "/doctordashboard" : "/patientdashboard");
+      navigate(role === "doctor" ? "/doctordashboard/profile" : "/patientdashboard");
     } catch (err) {
       setError(err.message || "Login failed.");
     } finally {
@@ -277,7 +277,7 @@ export default function HomePage() {
   return (
     <div className="home-app">
       <div className="home-header">
-        <h1>Clinic <span>System</span></h1>
+        <h1>DOCTOR APPOINTMENT <span>SYSTEM</span></h1>
       </div>
 
       <div className="home-body">

@@ -171,7 +171,6 @@ body {
 .docList{
   display: flex;
   justify-content: space-between;
-  /* background-color: #8e8171; */
   border: 1px solid #8e8171;
   color: #8e8171;
   padding: 10px 20px;

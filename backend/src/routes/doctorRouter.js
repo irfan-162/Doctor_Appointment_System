@@ -10,7 +10,7 @@ doctorRouter.post('/login', doctorController.doctorLogin);
 //profile - section
 doctorRouter.get('/profile',verifyToken,doctorController.getProfileInfo);
 doctorRouter.post('/update',verifyToken,doctorController.editProfile);
-doctorRouter.get("/weekly-visits", verifyToken, getWeeklyVisits);
+doctorRouter.get("/weekly-visits", verifyToken, doctorController.getWeeklyVisits);
 
 //prescribe-section
 doctorRouter.get('/patients',verifyToken,doctorController.getPatient);

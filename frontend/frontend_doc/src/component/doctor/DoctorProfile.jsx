@@ -7,7 +7,7 @@ export default function Profile() {
   const [editingField, setEditingField] = useState(null);
   const [fieldValues, setFieldValues] = useState({});
   const [errors, setErrors] = useState({});
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   const genderOptions = ["Cardiologist", "Orthopedic", "Medicine"];
 
@@ -17,7 +17,7 @@ export default function Profile() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}` // attach token here
+        "Authorization": `Bearer ${token}` 
       },
     })
       .then((res) => {
@@ -66,17 +66,16 @@ export default function Profile() {
     const handleSendClick = async (field) => {
       const updatedValue = fieldValues[field];
     
-      if (!validateField(field, updatedValue)) return; // Don't send invalid data
-    
+      if (!validateField(field, updatedValue)) return; 
+      console.log("Updating field:", field, "with value:", updatedValue);
       try {
         const res = await fetch("http://localhost:3001/api/doctor/update", {
           method: "POST",
           headers: { 
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // <-- add this
+            "Authorization": `Bearer ${token}` 
           },
           body: JSON.stringify({
-            id: 2,
             field: field,
             value: updatedValue,
           }),
@@ -85,7 +84,6 @@ export default function Profile() {
         const data = await res.json();
     
         if (res.ok) {
-          // Update local state only if backend update succeeded
           setPatient((prev) => ({ ...prev, [field]: updatedValue }));
           setEditingField(null);
           console.log("Update successful:", data);

@@ -10,7 +10,7 @@ exports.doctorLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // 1. Find doctor
+    //Find doctor
     const result = await db.query(
       `SELECT *
        FROM doctor 
@@ -24,14 +24,11 @@ exports.doctorLogin = async (req, res) => {
 
     const doctor = result.rows[0];
 
-    // 2. Check password
-    const isMatch = password == doctor.password ? true : false; // In production, use bcrypt.compare(password, doctor.password)
-
+    const isMatch = password == doctor.password ? true : false; 
     if (!isMatch) {
       return res.status(401).json({ error: "Invalid password" });
     }
-
-    // 3. Generate token
+    //gen-token
     const token = jwt.sign(
       {
         doctor_id: doctor.doctor_id,
@@ -41,7 +38,7 @@ exports.doctorLogin = async (req, res) => {
       { expiresIn: "1h" }
     );
 
-    // 4. Send token
+    //Send token
     res.json({
       message: "Login successful",
       token

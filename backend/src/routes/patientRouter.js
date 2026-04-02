@@ -7,15 +7,11 @@ patientRouter.get('/profile',patientController.getProfileInfo);
 patientRouter.post('/update',patientController.editProfile);
 
 //get category
-patientRouter.get('/cardiologist',patientController.getCardiologist);
-patientRouter.get('/orthopedic',patientController.getOrthopedic);
-patientRouter.get('/gynecologist',patientController.getGynecologist);
-patientRouter.get('/ent',patientController.getENT);
-patientRouter.get('/dermatologist',patientController.getDermatologist);
-patientRouter.get('/psychiatrist',patientController.getPsychiatrist);
-patientRouter.get('/neurologist',patientController.getNeurologist);
-patientRouter.get('/pediatrician',patientController.getPediatrician);
-patientRouter.get('/medicine',patientController.getMedicine);
+patientRouter.get('/specializations',patientController.getSpecializations);
+patientRouter.get('/doctorList',patientController.getDoctorList);
+patientRouter.get('/doctorSchedule',patientController.getDocSchedule);
+patientRouter.post('/bookAppointment',patientController.AppointmentBooking);
+
 
 //get-appointment
 patientRouter.get('/upcoming-appointment',patientController.getAppointment);

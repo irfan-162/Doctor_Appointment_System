@@ -5,25 +5,16 @@ import { MdEvent } from "react-icons/md";
 import { FaUser, FaFileMedical, FaCreditCard } from "react-icons/fa"
 import { MdDashboard, MdEventAvailable, MdAddCircle } from "react-icons/md"
 
-import Profile from '../../component/patient/profile'
-import DiagnosisForm from '../../component/doctor/DiagnosisForm'
-import MedicalRec from '../../component/patient/MedicalRec'
-import PaymentLists from '../../component/patient/PaymentLists'
-import DoctorProfile from '../../component/doctor/DoctorProfile'
-import ScheduleManagement from '../../component/doctor/ScheduleManagement'
-import PatientList from '../../component/doctor/PatientList'
-
 export default function DoctortDashboard(){
   
 
   const [doctor, setDoctor] = useState(" ")
-  const token = localStorage.getItem("token")
   useEffect(()=>{
     fetch("http://localhost:3001/api/doctor/profile",{
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`
       },
     })
       .then(res => res.json())

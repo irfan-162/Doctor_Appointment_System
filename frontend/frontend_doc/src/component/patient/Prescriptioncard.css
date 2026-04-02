@@ -59,8 +59,9 @@ body {
 /* ── GRID ── */
 .rx-grid {
   width: 100%;
+  
   display: grid;
-  max-height: 70vh;
+ height: 70vh;
   grid-template-columns: 1fr 1fr;
   gap: 1px;
 }

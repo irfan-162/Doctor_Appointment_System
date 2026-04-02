@@ -20,7 +20,7 @@ export default function DiagnosisForm() {
   const [medicines,   setMedicines]   = useState([mkMed()]);
   const [treatments,  setTreatments]  = useState([mkTreat()]);
   const { appID } = useParams();
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
   console.log(appID);
 
   /* ── Load current appointment ── */

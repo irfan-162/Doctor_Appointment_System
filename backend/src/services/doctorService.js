@@ -63,14 +63,14 @@ where doctor_id = $1
 };
 
 exports.updateProfile = async (req,res) => {
-  const { id, field, value } = req.body;
+  const {field, value } = req.body;
 
-  if (!id || !field) return res.status(400).json({ message: "Invalid request" });
-
+  if (!field) return res.status(400).json({ message: "Invalid request" });
+  const doctorId = req.user.doctor_id;
   try {
     await db.query(
       `UPDATE doctor SET ${field} = $1 WHERE doctor_id = $2`,
-      [value, id]
+      [value, doctorId]
     );
     res.json({ message: "doctor updated successfully" });
   } catch (err) {
@@ -140,7 +140,7 @@ exports.createConsultationService = async (payload) => {
   try {
     await db.query("BEGIN");
 
-    // 1. Insert Medical Record
+    //Insert Medical Record
     const recordResult = await db.query(
       `INSERT INTO medical_record (appointment_id, diagnosis, notes)
        VALUES ($1, $2, $3)
@@ -150,7 +150,7 @@ exports.createConsultationService = async (payload) => {
 
     const recordId = recordResult.rows[0].record_id;
 
-    // 2. Insert Medicines
+    //Insert Medicines
     for (let med of medicines) {
       await db.query(
         `INSERT INTO prescription (record_id, medicine_name, dosage, duration)
@@ -159,7 +159,7 @@ exports.createConsultationService = async (payload) => {
       );
     }
 
-    // 3. Insert Treatments
+    //  Insert Treatments
     for (let t of treatments) {
       await db.query(
         `INSERT INTO treatment (record_id, treatment_name)
@@ -168,7 +168,7 @@ exports.createConsultationService = async (payload) => {
       );
     }
 
-    // 4. Update Appointment Status
+    //Update Appointment Status
     await db.query(
       `UPDATE appointment
        SET status = 'Completed'

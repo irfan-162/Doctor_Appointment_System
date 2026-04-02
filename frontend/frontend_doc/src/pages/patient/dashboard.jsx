@@ -9,6 +9,7 @@ import UpcomingApp from '../../component/patient/UpcomingApp';
 import AppointmentsList from '../../component/patient/AppointmentsList';
 import MedicalRec from '../../component/patient/MedicalRec';
 import PaymentLists from '../../component/patient/PaymentLists';
+import DoctorBrowser from '../../component/patient/DoctorBrowser';
 
 export default function PatientDashboard (){
 
@@ -87,7 +88,7 @@ export default function PatientDashboard (){
     </div>
     <div className="bottom">
      {(activeSection === "pFile") && <Profile/>}
-     {(activeSection === "bApp") && <Category/>}
+     {(activeSection === "bApp") && <DoctorBrowser/>}
      {(activeSection === "upApp") && <AppointmentsList/>}
      {(activeSection === "medRec") && <MedicalRec/>}
      {(activeSection === "bill") && <PaymentLists/>}

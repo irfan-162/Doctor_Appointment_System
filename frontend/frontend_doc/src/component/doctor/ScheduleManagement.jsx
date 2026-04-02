@@ -23,7 +23,7 @@ export default function ScheduleManagement() {
     setLoading(true);
   
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
   
       if (!token) {
         throw new Error("No token found. Please login.");
@@ -69,7 +69,7 @@ export default function ScheduleManagement() {
 
   /* ── Add entry → reload list ── */
   const handleAdd = async () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if (!start || !end) { setError("Fill in both times."); return; }
     if (start >= end)   { setError("Start must be before end."); return; }
@@ -98,7 +98,7 @@ export default function ScheduleManagement() {
 
   const handleDelete = async (id) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
   
       const res = await fetch(
         `http://localhost:3001/api/doctor/schedule/${id}`,

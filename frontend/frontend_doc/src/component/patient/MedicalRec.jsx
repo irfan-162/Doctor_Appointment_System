@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import "./MedicalRec.css";
 import PrescriptionCard from "./PrescriptionCard";
+import Prescription from "./Prescription";
 
 const MedicalRec = () => {
   const [appointments, setAppointments] = useState([]);
@@ -68,7 +69,7 @@ const MedicalRec = () => {
   return (
     <div className="appointments-container">
       {isList && <ListView/>}
-      {isPres && <PrescriptionCard apptID={apptID}/>}
+      {isPres && <Prescription/>}
     </div>
     
     

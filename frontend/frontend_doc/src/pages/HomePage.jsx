@@ -30,8 +30,7 @@ function LoginForm({ role }) {
       });
       if (!res.ok) throw new Error("Invalid credentials.");
       const data = await res.json();
-      localStorage.setItem("token", data.token);
-
+      sessionStorage.setItem("token", data.token);
       // Mock — remove when API is connected
       navigate(role === "doctor" ? "/doctordashboard/profile" : "/patientdashboard");
     } catch (err) {

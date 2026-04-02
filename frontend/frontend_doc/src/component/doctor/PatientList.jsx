@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./PatientList.css";
-import DiagnosisForm from "./DiagnosisForm";
 
 export default function PatientList() {
   const [patients, setPatients] = useState([]);
   const [loading,  setLoading]  = useState(true);
   const navigate = useNavigate();
 
-  /* ── Load patients ── */
   useEffect(() => {
     const load = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("token"); // get token from localStorage
+        const token = sessionStorage.getItem("token");
         if (!token) {
           console.error("No token found, please login");
           return;

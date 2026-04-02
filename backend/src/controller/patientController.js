@@ -11,102 +11,40 @@ try {
 }
 };
 
-exports.getCardiologist = async (req,res)=>{
-  console.log("gettingCardiologis in controller");
-try {
-    const result = await patientService.fetchCardiologist();
-    res.status(200).json(result);
-} catch (error) {
-  res.status(500).json({error : "Failed to fetch profile infos"})
-  
+exports.getSpecializations = async(req,res) =>{
+  console.log("getting specializations in controller");
+  try {
+      const result = await patientService.fetchSpecialization();
+      res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({error : "Failed to fetch profile infos"})
+    
+  }
 }
-};
-exports.getOrthopedic = async (req,res)=>{
-  console.log("orthopedic controller");
-try {
-    const result = await patientService.fetchOrthopedic();
-    res.status(200).json(result);
-} catch (error) {
-  res.status(500).json({error : "Failed to fetch profile infos"})
-  
-}
-};
-exports.getGynecologist = async (req,res)=>{
-  console.log("gyneo controller");
-try {
-    const result = await patientService.fetchGynecologist();
-    res.status(200).json(result);
-} catch (error) {
-  res.status(500).json({error : "Failed to fetch profile infos"})
-  
-}
-};
 
-exports.getENT = async (req,res)=>{
-  console.log("ENT controller");
-try {
-    const result = await patientService.fetchENT();
-    res.status(200).json(result);
-} catch (error) {
-  res.status(500).json({error : "Failed to fetch profile infos"})
-  
+exports.getDoctorList = async(req,res) =>{
+  console.log("getting doctor list in controller");
+  console.log(req.query.specialization);
+  try {
+      const result = await patientService.fetchDoctorList(req.query.specialization);
+      res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({error : "Failed to fetch doctorList infos"})
+    
+  }
 }
-};
 
-exports.getDermatologist = async (req,res)=>{
-  console.log("dermato in controller");
-try {
-    const result = await patientService.fetchDermatologist();
-    res.status(200).json(result);
-} catch (error) {
-  res.status(500).json({error : "Failed to fetch dermato infos"})
-  
+exports.getDocSchedule = async(req,res) =>{
+  console.log("getting  Doctor Schedule in controller");
+  console.log(req.query.id);
+  try {
+      const result = await patientService.getDoctorWithSchedules(req.query.id);
+      res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({error : "Failed to fetch doctor schedule infos"})
+    
+  }
 }
-};
-
-exports.getPsychiatrist  = async (req,res)=>{
-  console.log("psy in controller");
-try {
-    const result = await patientService.fetchPsychiatrist();
-    res.status(200).json(result);
-} catch (error) {
-  res.status(500).json({error : "Failed to fetch dermato infos"})
-  
-}
-};
-
-exports.getNeurologist  = async (req,res)=>{
-  console.log("nero in controller");
-try {
-    const result = await patientService.fetchNeurologist();
-    res.status(200).json(result);
-} catch (error) {
-  res.status(500).json({error : "Failed to fetch dermato infos"})
-  
-}
-};
-
-exports.getPediatrician = async (req,res)=>{
-  console.log("ped in controller");
-try {
-    const result = await patientService.fetchPediatrician();
-    res.status(200).json(result);
-} catch (error) {
-  res.status(500).json({error : "Failed to fetch dermato infos"})
-  
-}
-};
-
-exports.getMedicine = async (req,res)=>{
-  console.log("medicine in controller");
-try {
-    const result = await patientService.fetchMedicine();
-    res.status(200).json(result);
-} catch (error) {
-  res.status(500).json({error : "Failed to fetch dermato infos"})
-  
-}
-};
 
 exports.getSchedule = async(req,res) =>{
   console.log("gettingDoctor Schedule in controller");

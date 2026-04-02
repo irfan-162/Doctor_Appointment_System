@@ -15,139 +15,18 @@ exports.fetchProfile = async (id) => {
 
   return { patient_id, name, age, gender, phone, blood_group, email };
 };
-exports.fetchCardiologist = async () => {
+exports.fetchSpecialization = async () => {
   const result = await db.query(
     `
-    SELECT doctor_id,name,phone,email,ROUND(consultation_fee, 0) AS consultation_fee
+    SELECT specialization AS Specialization,count(*)
     FROM doctor
-    WHERE specialization = $1;
-    `,
-    ["Cardiologist"]
-  );
-  //console.log(info.rows);
-  //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
-  return result.rows;
-};
-exports.fetchOrthopedic = async () => {
-  console.log("orthopedic in service")
-  const result = await db.query(
+    GROUP BY specialization;
     `
-    SELECT doctor_id,name,phone,email,ROUND(consultation_fee, 0) AS consultation_fee
-    FROM doctor
-    WHERE specialization = $1;
-    `,
-    ["Orthopedic"]
   );
-  //console.log(info.rows);
+  console.log(result.rows);
   //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
   return result.rows;
-};
-
-exports.fetchGynecologist = async () => {
-  console.log("gyno in service")
-  const result = await db.query(
-    `
-    SELECT doctor_id,name,phone,email,ROUND(consultation_fee, 0) AS consultation_fee
-    FROM doctor
-    WHERE specialization = $1;
-    `,
-    ["Gynecologist"]
-  );
-  //console.log(info.rows);
-  //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
-  return result.rows;
-};
-
-exports.fetchENT = async () => {
-  console.log("gyno in service")
-  const result = await db.query(
-    `
-    SELECT doctor_id,name,phone,email,ROUND(consultation_fee, 0) AS consultation_fee
-    FROM doctor
-    WHERE specialization = $1;
-    `,
-    ["ENT Specialist"]
-  );
-  //console.log(info.rows);
-  //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
-  return result.rows;
-};
-
-exports.fetchDermatologist = async () => {
-  console.log("fetchDermatologist in service")
-  const result = await db.query(
-    `
-    SELECT doctor_id,name,phone,email,ROUND(consultation_fee, 0) AS consultation_fee
-    FROM doctor
-    WHERE specialization = $1;
-    `,
-    ["Dermatologist"]
-  );
-  //console.log(info.rows);
-  //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
-  return result.rows;
-};
-
-exports.fetchPsychiatrist = async () => {
-  console.log("fetchDermatologist in service")
-  const result = await db.query(
-    `
-    SELECT doctor_id,name,phone,email,ROUND(consultation_fee, 0) AS consultation_fee
-    FROM doctor
-    WHERE specialization = $1;
-    `,
-    ["Psychiatrist"]
-  );
-  //console.log(info.rows);
-  //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
-  return result.rows;
-};
-
-exports.fetchNeurologist = async () => {
-  console.log("fetchNeuro in service")
-  const result = await db.query(
-    `
-    SELECT doctor_id,name,phone,email,ROUND(consultation_fee, 0) AS consultation_fee
-    FROM doctor
-    WHERE specialization = $1;
-    `,
-    ["Neurologist"]
-  );
-  //console.log(info.rows);
-  //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
-  return result.rows;
-};
-
-exports.fetchPediatrician = async () => {
-  console.log("fetchNeuro in service")
-  const result = await db.query(
-    `
-    SELECT doctor_id,name,phone,email,ROUND(consultation_fee, 0) AS consultation_fee
-    FROM doctor
-    WHERE specialization = $1;
-    `,
-    ["Pediatrician"]
-  );
-  //console.log(info.rows);
-  //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
-  return result.rows;
-};
-
-exports.fetchMedicine  = async () => {
-  console.log("fetchNeuro in service")
-  const result = await db.query(
-    `
-    SELECT doctor_id,name,phone,email,ROUND(consultation_fee, 0) AS consultation_fee
-    FROM doctor
-    WHERE specialization = $1;
-    `,
-    ["Medicine"]
-  );
-  //console.log(info.rows);
-  //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
-  return result.rows;
-};
-
+}
 exports.fetchScheduleID = async (id,day) => {
   const result = await db.query(
     `
@@ -161,6 +40,72 @@ exports.fetchScheduleID = async (id,day) => {
   //const {patient_id,name,age,gender,phone,blood_group,email,password} = info.rows[0];
   return result.rows[0];
 };
+
+exports.fetchDoctorList = async (specialization) => {
+  console.log(specialization)
+      let result;
+  try {
+      result = await db.query(
+      `
+      SELECT doctor_id as DoctorID , name as Name , consultation_fee as fee
+      FROM doctor
+      WHERE specialization = $1
+      `,
+      [specialization]
+    );
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+  console.log(result.rows);
+  return result.rows;
+
+};
+
+exports.getDoctorWithSchedules = async (DoctorID) => {
+  try {
+    await db.query("BEGIN");
+
+    // 1. Fetch doctor
+    const doctorResult = await db.query(
+      `
+      SELECT doctor_id, name,specialization,phone,email,consultation_fee as fee
+      FROM doctor
+      WHERE doctor_id = $1
+      `,
+      [DoctorID]
+    );
+    
+    if (doctorResult.rows.length === 0) {
+      throw new Error("Doctor not found");
+    }
+
+    const doctor = doctorResult.rows[0];
+    console.log(doctor);
+    // 2. Fetch schedules
+    const scheduleResult = await db.query(
+      `
+      SELECT *
+      FROM schedule
+      WHERE doctor_id = $1
+      `,
+      [DoctorID]
+    );
+    console.log(scheduleResult.rows);
+    await db.query("COMMIT");
+
+    // return like your style
+    return {
+      ...doctor,
+      schedules: scheduleResult.rows
+    };
+
+  } catch (err) {
+    await db.query("ROLLBACK");
+    throw err;
+  }
+};
+
 exports.fetchSchedule = async (id) => {
   const info = await db.query(
     `
@@ -197,6 +142,7 @@ exports.updateProfile = async (req,res) => {
 
 exports.postAppointment = async (req, res) => {
   const { appointment_date, appointment_time, status, doctor_id, patient_id, schedule_id } = req.body;
+  console.log(req.body);
 
   try {
     const result = await db.query(

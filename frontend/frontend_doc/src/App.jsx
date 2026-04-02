@@ -10,12 +10,14 @@ import HomePage from './pages/HomePage';
 import PatientList from './component/doctor/PatientList';
 import ScheduleManagement from './component/doctor/ScheduleManagement';
 import DiagnosisForm from './component/doctor/DiagnosisForm';
+import DoctorBrowser from './component/patient/DoctorBrowser';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Prescription from './component/patient/Prescription';
 function App() {
  return(
   <>
 
-     <Routes>
+     {/* <Routes>
      <Route path="/" element={<HomePage />} />
      <Route path="/doctordashboard" element={<DoctorDashboard />}>
           <Route path="PatientList" element={<PatientList />} />
@@ -23,7 +25,8 @@ function App() {
           <Route path="schedulemanagement" element={<ScheduleManagement />} />
           <Route path="PatientList/doctordashboard/DiagnosisForm/:appID" element={<DiagnosisForm />} />
         </Route>
-     </Routes>
+     </Routes> */}
+     <PatientDashboard/>
   </>
  
  );

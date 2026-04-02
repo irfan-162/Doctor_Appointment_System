@@ -33,7 +33,7 @@ export default function PatientVisitsChart() {
         const res = await fetch("http://localhost:3001/api/doctor/weekly-visits", {
           method: "GET",
           headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
+            "Authorization": `Bearer ${sessionStorage.getItem("token")}`
           },
         });
   
@@ -56,7 +56,7 @@ export default function PatientVisitsChart() {
       }
     };
   
-    load(); // 🔥 IMPORTANT
+    load(); 
   }, []);
 
 

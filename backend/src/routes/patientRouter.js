@@ -17,6 +17,8 @@ patientRouter.post('/bookAppointment',patientController.AppointmentBooking);
 patientRouter.get('/upcoming-appointment',patientController.getAppointment);
 patientRouter.get('/recordlist',patientController.getRecordList);
 //for precriptioncard
+patientRouter.get('/prescription',patientController.getPrescription);
+
 patientRouter.get('/medicines',patientController.getMedicinelist);
 patientRouter.get('/medrec',patientController.getMedrec);
 patientRouter.get('/recdoc',patientController.getRecdoc);

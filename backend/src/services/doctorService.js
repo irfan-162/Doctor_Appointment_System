@@ -160,11 +160,12 @@ exports.createConsultationService = async (payload) => {
     }
 
     //  Insert Treatments
+    console.log(treatments)
     for (let t of treatments) {
       await db.query(
-        `INSERT INTO treatment (record_id, treatment_name)
-         VALUES ($1, $2)`,
-        [recordId, t.name]
+        `INSERT INTO treatment (record_id, treatment_name,description )
+         VALUES ($1, $2 ,$3)`,
+        [recordId, t.name ,t.description]
       );
     }
 

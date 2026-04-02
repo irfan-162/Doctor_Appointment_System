@@ -100,6 +100,17 @@ try {
 }
 };
 
+exports.getPrescription = async(req,res) =>{
+  console.log("getting appointment");
+try {
+    const result = await patientService.fetchPrescription(req.query.appID);
+    res.status(200).json(result);
+} catch (error) {
+  res.status(500).json({error : "Failed to fetch profile infos"})
+  
+}
+};
+
 exports.getRecordList = async(req,res) =>{
   console.log("getting record list");
 try {

@@ -285,6 +285,69 @@ exports.fetchRecdoc = async(id) =>{
   return info.rows[0];
 }
 
+exports.fetchPrescription = async (id) => {
+
+  const medRec = await db.query(
+    `
+    SELECT TO_CHAR(m.appointment_date,'DD Month YYYY') as date,
+           mr.diagnosis as name,
+           mr.notes as notes
+    FROM appointment m 
+    JOIN medical_record mr
+    ON m.appointment_id = mr.appointment_id
+    WHERE mr.appointment_id = $1
+    `,
+    [id]
+  );
+
+  const doctor = await db.query(
+    `
+    SELECT dr.name as name,
+           dr.specialization as specialty,
+           dr.email as email,
+           dr.phone as phone
+    FROM appointment m 
+    JOIN doctor dr
+    ON m.doctor_id = dr.doctor_id
+    WHERE m.appointment_id = $1
+    `,
+    [id]
+  );
+
+  const treatments = await db.query(
+    `
+    SELECT tr.treatment_name as name,
+           tr.description as description
+    FROM medical_record mr 
+    JOIN treatment tr
+    ON mr.record_id = tr.record_id
+    WHERE mr.appointment_id = $1
+    `,
+    [id]
+  ); 
+
+  const medicines = await db.query(
+    `
+    SELECT medicine_name as name,
+           duration,
+           dosage as frequency
+    FROM medical_record mr 
+    JOIN prescription pr
+    ON mr.record_id = pr.record_id
+    WHERE mr.appointment_id = $1
+    `,
+    [id]
+  ); 
+
+  return {
+    record: medRec.rows[0],   
+    doctor: doctor.rows[0],          
+    treatments: treatments.rows,   
+    medicines: medicines.rows      
+  };
+};
+
+
 exports.fetchBillPending = async(id) =>{
   console.log('fetching...')
     const info = await db.query(

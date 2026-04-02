@@ -13,6 +13,21 @@
   flex-direction: column;
 }
 
+.back-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: #888;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.back-btn:hover { border-color: #8e8171; color: #8e8171; }
+
 /* ── HEADER ── */
 .rx-header {
   padding: 18px 32px;

@@ -64,7 +64,7 @@ export default function DiagnosisForm() {
       medicines: medicines.filter(m => m.name.trim()),
       treatments: treatments.filter(t => t.name.trim()),
     };
-
+    console.log(payload.treatments);
     try {
       // --- API REQUEST (POST save diagnosis) 
       const res = await fetch("http://localhost:3001/api/doctor/consultation", {

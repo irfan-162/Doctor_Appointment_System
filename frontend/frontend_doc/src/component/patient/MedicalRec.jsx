@@ -69,7 +69,7 @@ const MedicalRec = () => {
   return (
     <div className="appointments-container">
       {isList && <ListView/>}
-      {isPres && <Prescription/>}
+      {isPres && <Prescription setisList={setisList} setisPres={setisPres} apptID={apptID}/>}
     </div>
     
     

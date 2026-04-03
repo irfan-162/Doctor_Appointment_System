@@ -228,24 +228,20 @@ function DoctorDetail({ doctor }) {
     if (!selectedDate || !selectedSlot || !matchedSchedule) return;
     setBooking(true);
     try {
-      // APPOINTMENT fields from ERD:
-      //   AppointmentID (PK, auto), Appointment_Date, Appointment_Time,
-      //   Status, DoctorID (FK), PatientID (FK), ScheduleID (FK)
 
-      // --- API REQUEST (POST /api/appointments) ---
       const res = await fetch("http://localhost:3001/api/patient/bookAppointment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-         
+          "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
           // token carries PatientID — extracted server-side from JWT
         },
         body: JSON.stringify({
-          patient_id:        3,                      // from session (mocked as 3 here)
-          doctor_id:         doctor.doctor_id,           // FK → DOCTOR.DoctorID
-          schedule_id:       matchedSchedule.schedule_id, // FK → SCHEDULE.ScheduleID
-          appointment_date: selectedDate.toISOString().split("T")[0], // "YYYY-MM-DD"
-          appointment_time: selectedSlot,              // "HH:MM" (30-min slot)
+          patient_id:        3,                      
+          doctor_id:         doctor.doctor_id,           
+          schedule_id:       matchedSchedule.schedule_id, 
+          appointment_date: selectedDate.toISOString().split("T")[0],
+          appointment_time: selectedSlot,             
           status:           "Pending",
         }),
       });
@@ -399,7 +395,11 @@ export default function DoctorBrowser() {
   useEffect(() => {
     const load = async () => {
       try {
-        const res  = await fetch("http://localhost:3001/api/patient/specializations");
+        const res  = await fetch('http://localhost:3001/api/patient/specializations',
+          {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+          }
+        );
         const data = await res.json();
         // expected: [{ Specialization: "Cardiology", count: 3 }, ...]
         setCategories(data);
@@ -418,7 +418,14 @@ export default function DoctorBrowser() {
     const load = async () => {
       try {
         const params = new URLSearchParams({ specialization: category.specialization });
-        const res    = await fetch(`http://localhost:3001/api/patient/doctorList?${params}`);
+        const res = await fetch(
+          `http://localhost:3001/api/patient/doctorList?${params}`,
+          {
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          }
+        );
         const data   = await res.json();
         // expected: [{ DoctorID, Name, fee }, ...]
         setDoctorList(data);
@@ -434,7 +441,11 @@ export default function DoctorBrowser() {
   // Returns full DOCTOR row joined with SCHEDULE rows.
    const loadDoctor = async (DoctorID) => {
     try {
-      const res  = await fetch(`http://localhost:3001/api/patient/doctorSchedule?id=${DoctorID}`);
+      const res  = await fetch(`http://localhost:3001/api/patient/doctorSchedule?id=${DoctorID}`,
+        {
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+        }
+      );
       const data = await res.json();
       // expected: {
       //   DoctorID, Name, Specialization, Phone, Email, fee,

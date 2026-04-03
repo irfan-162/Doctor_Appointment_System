@@ -1,9 +1,13 @@
 const patientService = require('../services/patientService');
+const jwt = require("jsonwebtoken");
+const db = require ('../config/db');
+require('dotenv').config();
+
 
 exports.getProfileInfo = async(req,res) =>{
-  console.log("gettingProfileInfo in controller");
+  console.log("gettingProfileInfo in controller" + req.user.patient_id);
 try {
-    const result = await patientService.fetchProfile(req.query.id);
+    const result = await patientService.fetchProfile(req.user.patient_id);
     res.status(200).json(result);
 } catch (error) {
   res.status(500).json({error : "Failed to fetch profile infos"})
@@ -92,7 +96,7 @@ try {
 exports.getAppointment = async(req,res) =>{
   console.log("getting appointment");
 try {
-    const result = await patientService.fetchAppointment(req.query.patientID);
+    const result = await patientService.fetchAppointment(req.user.patient_id);
     res.status(200).json(result);
 } catch (error) {
   res.status(500).json({error : "Failed to fetch profile infos"})
@@ -168,7 +172,7 @@ try {
 exports.getBillPending = async(req,res) =>{
   console.log("getting treatment..");
 try {
-    const result = await patientService.fetchBillPending(req.query.patID);
+    const result = await patientService.fetchBillPending(req.user.patient_id);
     res.status(200).json(result);
 } catch (error) {
   res.status(500).json({error : "Failed to fetch profile infos"})
@@ -179,7 +183,7 @@ try {
 exports.getBillPaid = async(req,res) =>{
   console.log("getting treatment..");
 try {
-    const result = await patientService.fetchBillPaid(req.query.patID);
+    const result = await patientService.fetchBillPaid(req.user.patient_id);
     res.status(200).json(result);
 } catch (error) {
   res.status(500).json({error : "Failed to fetch profile infos"})
@@ -203,5 +207,46 @@ exports.deleteAppointment = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+};
+
+exports.loginPatient = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // 1. Check patient
+    const result = await db.query(
+      `SELECT * FROM patient WHERE email = $1`,
+      [email]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: "Invalid email" });
+    }
+
+    const patient = result.rows[0];
+
+    // 2. Check password (plain for now)
+    if (patient.password !== password) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    // 3. Create JWT
+    const token = jwt.sign(
+      {
+        patient_id: patient.patient_id,
+        email: patient.email,
+        role: "patient"
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    // 4. Send token
+    res.json({ token });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Login failed" });
   }
 };

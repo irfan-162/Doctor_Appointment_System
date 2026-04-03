@@ -28,7 +28,7 @@ export default function Prescription({setisList,setisPres,apptID}) {
     const load = async () => {
       try {
         const res  = await fetch(`http://localhost:3001/api/patient/prescription?appID=${apptID}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
         });
         const data = await res.json();
         setData(data);

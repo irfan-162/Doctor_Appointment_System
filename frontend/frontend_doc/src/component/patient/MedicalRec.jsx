@@ -14,9 +14,15 @@ const MedicalRec = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/patient/recordlist?patientID=3");
+        const response = await fetch('http://localhost:3001/api/patient/recordlist', {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          }
+        });
+      
         const data = await response.json();
         setAppointments(data);
+      
       } catch (error) {
         console.error("Failed to fetch appointments:", error);
       }

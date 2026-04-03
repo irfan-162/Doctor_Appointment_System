@@ -124,7 +124,8 @@ WHERE doctor_id = $1;
 };
 
 exports.updateProfile = async (req,res) => {
-  const { id, field, value } = req.body;
+  const { field, value } = req.body;
+  const id = req.user.patient_id;
 
   if (!id || !field) return res.status(400).json({ message: "Invalid request" });
 
@@ -141,8 +142,9 @@ exports.updateProfile = async (req,res) => {
 };
 
 exports.postAppointment = async (req, res) => {
-  const { appointment_date, appointment_time, status, doctor_id, patient_id, schedule_id } = req.body;
+  const { appointment_date, appointment_time, status, doctor_id,schedule_id } = req.body;
   console.log(req.body);
+  const patient_id = req.user.patient_id; // Get patient ID from authenticated user
 
   try {
     const result = await db.query(
@@ -223,67 +225,7 @@ WHERE a.patient_id = $1
 
 }
 
-exports.fetchMedicinelist = async(id) =>{
 
-  const info = await db.query(
-    `
-SELECT medicine_name as name,duration,dosage as frequency
-FROM medical_record mr JOIN prescription pr
-ON mr.record_id = pr.record_id
-WHERE mr.appointment_id = $1
-    `,
-    [id]
-  );
-  console.log(info.rows);
-  return info.rows;
-
-}
-
-exports.fetchTreatment = async(id) =>{
-
-  const info = await db.query(
-    `
-SELECT tr.treatment_name as name,tr.description as description
-FROM medical_record mr JOIN treatment tr
-ON mr.record_id = tr.record_id
-WHERE mr.appointment_id = $1
-    `,
-    [id]
-  );
-  console.log(info.rows);
-  return info.rows;
-
-}
-
-exports.fetchMedrec = async(id) =>{
-  console.log('fetching...')
-    const info = await db.query(
-      `
-  SELECT TO_CHAR(m.appointment_date,'DD Month YYYY') as date,mr.diagnosis as name,mr.notes as notes
-  FROM appointment m JOIN medical_record mr
-  ON m.appointment_id = mr.appointment_id
-  WHERE mr.appointment_id = $1
-      `,
-      [id]
-    );
-  console.log(info.rows[0]);
-  return info.rows[0];
-}
-
-exports.fetchRecdoc = async(id) =>{
-  console.log('fetching...')
-    const info = await db.query(
-      `
-  SELECT dr.name as name,dr.specialization as specialty,dr.email as email,dr.phone as phone
-  FROM appointment m JOIN doctor dr
-  ON m.doctor_id = dr.doctor_id
-  WHERE m.appointment_id = $1
-      `,
-      [id]
-    );
-  console.log(info.rows[0]);
-  return info.rows[0];
-}
 
 exports.fetchPrescription = async (id) => {
 

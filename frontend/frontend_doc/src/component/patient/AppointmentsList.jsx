@@ -9,7 +9,11 @@ export default function AppointmentsList() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch("http://localhost:3001/api/patient/upcoming-appointment?patientID=3"); // adjust endpoint if needed
+        const response = await fetch('http://localhost:3001/api/patient/upcoming-appointment',
+          {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+          }
+        ); // adjust endpoint if needed
         const data = await response.json();
         setAppointments(data);
       } catch (error) {
@@ -32,6 +36,7 @@ export default function AppointmentsList() {
     try {
       await fetch(`http://localhost:3001/api/patient/appointments/${id}`, {///api/patient/appointments/:id
         method: "DELETE",
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
       });
 
       setAppointments((prev) => prev.filter((appt) => appt.id !== id));

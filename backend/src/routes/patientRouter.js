@@ -2,42 +2,39 @@ const express = require('express');
 const patientRouter = express.Router();
 
 const patientController = require('../controller/patientController');
+const { verifyPatient } = require('./PatientAuth');
 
-patientRouter.get('/profile',patientController.getProfileInfo);
-patientRouter.post('/update',patientController.editProfile);
+//login
+patientRouter.post('/login',patientController.loginPatient);
+
+patientRouter.get('/profile',verifyPatient,patientController.getProfileInfo);
+patientRouter.post('/update',verifyPatient,patientController.editProfile);
 
 //get category
-patientRouter.get('/specializations',patientController.getSpecializations);
-patientRouter.get('/doctorList',patientController.getDoctorList);
-patientRouter.get('/doctorSchedule',patientController.getDocSchedule);
-patientRouter.post('/bookAppointment',patientController.AppointmentBooking);
+patientRouter.get('/specializations',verifyPatient,patientController.getSpecializations);
+patientRouter.get('/doctorList',verifyPatient,patientController.getDoctorList);
+patientRouter.get('/doctorSchedule',verifyPatient,patientController.getDocSchedule);
+patientRouter.post('/bookAppointment',verifyPatient,patientController.AppointmentBooking);
 
 
 //get-appointment
-patientRouter.get('/upcoming-appointment',patientController.getAppointment);
-patientRouter.get('/recordlist',patientController.getRecordList);
+patientRouter.get('/upcoming-appointment',verifyPatient,patientController.getAppointment);
+patientRouter.get('/recordlist',verifyPatient,patientController.getRecordList);
 //for precriptioncard
-patientRouter.get('/prescription',patientController.getPrescription);
+patientRouter.get('/prescription',verifyPatient,patientController.getPrescription);
 
-patientRouter.get('/medicines',patientController.getMedicinelist);
-patientRouter.get('/medrec',patientController.getMedrec);
-patientRouter.get('/recdoc',patientController.getRecdoc);
-patientRouter.get('/treatment',patientController.getTreatment);
-
-patientRouter.get('/billPending',patientController.getBillPending);
-patientRouter.get('/billPaid',patientController.getBillPaid);
-
-
+patientRouter.get('/billPending',verifyPatient,patientController.getBillPending);
+patientRouter.get('/billPaid',verifyPatient,patientController.getBillPaid);
 
 
 //delete appointment
-patientRouter.delete("/appointments/:id", patientController.deleteAppointment);
+patientRouter.delete("/appointments/:id", verifyPatient,patientController.deleteAppointment);
 
 
 
-patientRouter.get('/schedule',patientController.getSchedule);
-patientRouter.get('/scheduleID',patientController.getScheduleID);
-patientRouter.post('/bookAppointment',patientController.AppointmentBooking);
+patientRouter.get('/schedule',verifyPatient,patientController.getSchedule);
+patientRouter.get('/scheduleID',verifyPatient,patientController.getScheduleID);
+patientRouter.post('/bookAppointment',verifyPatient,patientController.AppointmentBooking);
 
 
 module.exports = patientRouter; 

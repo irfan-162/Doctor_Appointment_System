@@ -12,10 +12,15 @@ import PaymentLists from '../../component/patient/PaymentLists';
 import DoctorBrowser from '../../component/patient/DoctorBrowser';
 
 export default function PatientDashboard (){
-
   const [patient, setPatient] = useState(null);
   useEffect(() => {
-    fetch("http://localhost:3001/api/patient/profile?id=3")
+    fetch('http://localhost:3001/api/patient/profile',{
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`
+      },
+    })
       .then(res => res.json())
       .then(data => {
         console.log(data);

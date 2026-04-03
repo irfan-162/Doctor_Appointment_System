@@ -17,7 +17,7 @@ function App() {
  return(
   <>
 
-     {/* <Routes>
+     <Routes>
      <Route path="/" element={<HomePage />} />
      <Route path="/doctordashboard" element={<DoctorDashboard />}>
           <Route path="PatientList" element={<PatientList />} />
@@ -25,8 +25,9 @@ function App() {
           <Route path="schedulemanagement" element={<ScheduleManagement />} />
           <Route path="PatientList/doctordashboard/DiagnosisForm/:appID" element={<DiagnosisForm />} />
         </Route>
-     </Routes> */}
-     <PatientDashboard/>
+      <Route path="/patientdashboard" element={<PatientDashboard/>}/>  
+     </Routes>
+     {/* <PatientDashboard/> */}
   </>
  
  );

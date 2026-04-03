@@ -60,7 +60,10 @@ export default function PaymentDashboard() {
     const fetchPendingList = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/api/patient/billPending?patID=3`
+          `http://localhost:3001/api/patient/billPending`,
+          {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+          }
         );
 
         if (!response.ok) {
@@ -78,7 +81,10 @@ export default function PaymentDashboard() {
     const fetchPaidList = async () => {
       try {
         const response = await fetch(
-          `http://localhost:3001/api/patient/billPaid?patID=3`
+          `http://localhost:3001/api/patient/billPaid`,
+          {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` },
+          }
         );
 
         if (!response.ok) {

@@ -12,7 +12,15 @@ export default function Profile() {
 
   // Fetch patient data
   useEffect(() => {
-    fetch("http://localhost:3001/api/patient/profile?id=3")
+    fetch('http://localhost:3001/api/patient/profile',
+      {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`
+      }
+    }
+    )
       .then((res) => res.json())
       .then((data) => {
         setPatient(data);
@@ -61,7 +69,10 @@ export default function Profile() {
       try {
         const res = await fetch("http://localhost:3001/api/patient/update", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${sessionStorage.getItem("token")}`
+          },
           body: JSON.stringify({
             id: 3,           
             field: field,    

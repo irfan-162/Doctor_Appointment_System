@@ -13,6 +13,7 @@ import DiagnosisForm from './component/doctor/DiagnosisForm';
 import DoctorBrowser from './component/patient/DoctorBrowser';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Prescription from './component/patient/Prescription';
+import BillList from './component/doctor/BillList';
 function App() {
  return(
   <>
@@ -22,6 +23,7 @@ function App() {
      <Route path="/doctordashboard" element={<DoctorDashboard />}>
           <Route path="PatientList" element={<PatientList />} />
           <Route path="profile" element={<DoctorProfile />} />
+          <Route path="billing" element={<BillList/>} />
           <Route path="schedulemanagement" element={<ScheduleManagement />} />
           <Route path="PatientList/doctordashboard/DiagnosisForm/:appID" element={<DiagnosisForm />} />
         </Route>

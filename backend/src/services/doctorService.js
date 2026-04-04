@@ -1,4 +1,50 @@
 const db = require("../config/db");
+const jwt = require("jsonwebtoken");
+
+exports.signup = async (doctorData) => {
+  const {
+    name,
+    email,
+    phone,
+    specialization,
+    consultation_fee,
+    password,
+  } = doctorData;
+
+  // check duplicate email
+  const existing = await db.query(
+    "SELECT * FROM doctor WHERE email = $1",
+    [email]
+  );
+
+  if (existing.rows.length > 0) {
+    throw new Error("EMAIL_EXISTS");
+  }
+
+  const result = await db.query(
+    `
+    INSERT INTO doctor 
+    (name, email, phone, specialization, consultation_fee, password)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING doctor_id, name, email
+    `,
+    [name, email, phone, specialization, consultation_fee, password]
+  );
+
+  const doctor = result.rows[0];
+
+  // generate token
+  const token = jwt.sign(
+    { id: doctor.id, email: doctor.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  return {
+    token,
+    doctor,
+  };
+};
 
 exports.fetchProfile = async (id) => {
   const info = await db.query(
@@ -14,40 +60,7 @@ exports.fetchProfile = async (id) => {
   return info.rows[0];
 };
 
-exports.getWeeklyVisitsService = async (doctorId) => {
-  try {
-    const query = `
-      WITH weeks AS (
-        SELECT generate_series(
-          DATE_TRUNC('week', CURRENT_DATE) - INTERVAL '7 weeks',
-          DATE_TRUNC('week', CURRENT_DATE),
-          INTERVAL '1 week'
-        ) AS week
-      )
-      SELECT 
-        w.week,
-        COALESCE(COUNT(a.appointment_id), 0) AS total_visits
-      FROM weeks w
-      LEFT JOIN appointment a
-        ON DATE_TRUNC('week', a.appointment_date) = w.week
-        AND a.doctor_id = $1
-      GROUP BY w.week
-      ORDER BY w.week;
-    `;
-    const result = await db.query(query, [doctorId]);
 
-    const formatted = result.rows.map(row => ({
-      week: row.week.toISOString().split("T")[0], // YYYY-MM-DD
-      total: Number(row.total_visits)
-    }));
-    console.log(formatted);
-    return formatted;
-
-  } catch (err) {
-    console.error("Error fetching weekly visits:", err);
-    throw err;
-  }
-};
 
 exports.fetchSchedule = async (id) => {
   const info = await db.query(
@@ -97,6 +110,24 @@ exports.addSchedule = async (req,res) => {
   }
 };
 
+exports.fetchBillList = async (id) => {
+  const info = await db.query(
+    `
+    SELECT p."name" AS Name,a.appointment_id as id, b.amount as amount
+    FROM appointment a
+    JOIN patient p
+    ON a.patient_id = p.patient_id
+    JOIN bill b
+    ON a.appointment_id = b.appointment_id
+    WHERE a.doctor_id = $1 and b.payment_status = 'Pending'
+    `,
+    [id]
+  );
+  //console.log(info.rows);
+
+  return info.rows;
+};
+
 exports.fetchPatient = async (id) => {
   const info = await db.query(
     `
@@ -112,6 +143,19 @@ exports.fetchPatient = async (id) => {
 
   return info.rows;
 };
+
+exports.postPayCheck = async (appID) => {
+  try {
+    await db.query(
+      `CALL CompleteBillByAppointment($1)`,
+      [appID]
+    );
+    return { message: "Payment status updated successfully" };
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
 
 exports.fetchPatientInfo = async (docID,appID) => {
   const info = await db.query(

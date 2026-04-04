@@ -1,4 +1,54 @@
 const db = require("../config/db");
+const jwt = require("jsonwebtoken");
+
+exports.signup = async (patientData) => {
+  const {
+    name,
+    age,
+    gender,
+    blood_group,
+    phone,
+    email,
+    password,
+  } = patientData;
+
+  // check duplicate email
+  const existing = await db.query(
+    "SELECT * FROM patient WHERE email = $1",
+    [email]
+  );
+
+  if (existing.rows.length > 0) {
+    throw new Error("EMAIL_EXISTS");
+  }
+
+  // insert patient
+  const result = await db.query(
+    `
+    INSERT INTO patient 
+    (name, age, gender, blood_group, phone, email, password)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
+    RETURNING patient_id, name, email
+    `,
+    [name, age, gender, blood_group, phone, email, password]
+  );
+
+  const patient = result.rows[0];
+
+  // generate token
+  const token = jwt.sign(
+    { id: patient.patient_id, email: patient.email },
+    process.env.JWT_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  return {
+    token,
+    patient,
+  };
+};
+
+
 
 exports.fetchProfile = async (id) => {
   const info = await db.query(
@@ -217,7 +267,9 @@ JOIN medical_record mr
 ON a.appointment_id = mr.appointment_id
 JOIN doctor d
 ON a.doctor_id = d.doctor_id
-WHERE a.patient_id = $1
+JOIN bill b
+ON a.appointment_id = b.appointment_id
+WHERE a.patient_id = $1 and b.payment_status = 'Paid'
 ORDER BY a.appointment_date DESC
     `,
     [id]
@@ -318,7 +370,7 @@ exports.fetchBillPaid = async(id) =>{
       ON dr.doctor_id = a.doctor_id
       JOIN bill b
       ON a.appointment_id = b.appointment_id
-      WHERE a.patient_id = $1 AND b.payment_status = 'paid'
+      WHERE a.patient_id = $1 AND b.payment_status = 'Paid'
       `,
       [id]
     );

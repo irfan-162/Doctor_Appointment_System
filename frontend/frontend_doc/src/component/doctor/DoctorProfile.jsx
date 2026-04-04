@@ -170,7 +170,6 @@ export default function Profile() {
           </div>
         ))}
       </div>
-      <PatientVisitsChart/>
     </div>
   );
 }

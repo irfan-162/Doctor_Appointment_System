@@ -50,7 +50,43 @@ exports.doctorLogin = async (req, res) => {
   }
 };
 
+exports.signup = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      phone,
+      specialization,
+      consultation_fee,
+      password,
+    } = req.body;
 
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const result = await doctorService.signup({
+      name,
+      email,
+      phone,
+      specialization,
+      consultation_fee,
+      password,
+    });
+
+    res.status(201).json(result);
+  } catch (err) {
+    console.error(err);
+
+    if (err.message === "EMAIL_EXISTS") {
+      return res.status(400).json({
+        message: "Signup failed. Email may already be in use.",
+      });
+    }
+
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 exports.getProfileInfo = async(req,res) =>{
   console.log("gettingProfileInfo in controller for doctor");
@@ -117,6 +153,25 @@ try {
   res.status(500).json({error : "Failed to fetch profile infos"})
 }
 };
+
+exports.getBillList = async(req,res) =>{
+  console.log("gettingPatient in controller for doctor");
+try {
+    const result = await doctorService.fetchBillList(req.user.doctor_id);
+    res.status(200).json(result);
+} catch (error) {
+  res.status(500).json({error : "Failed to fetch profile infos"})
+}
+};
+
+exports.upPayCheck = async(req,res) =>{
+  try {
+      const result = await doctorService.postPayCheck(req.query.appID);
+      res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({error : "Failed to fetch profile infos"})
+  }
+}
 
 exports.getPatientInfo = async(req,res) =>{
   console.log("gettingPatientInfo in controller for doctor");

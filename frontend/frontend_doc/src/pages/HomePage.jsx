@@ -31,7 +31,6 @@ function LoginForm({ role }) {
       if (!res.ok) throw new Error("Invalid credentials.");
       const data = await res.json();
       sessionStorage.setItem("token", data.token);
-      // Mock — remove when API is connected
       navigate(role === "doctor" ? "/doctordashboard/profile" : "/patientdashboard");
     } catch (err) {
       setError(err.message || "Login failed.");
@@ -76,25 +75,23 @@ function DoctorSignupForm() {
     setLoading(true);
     try {
       // --- API REQUEST (POST doctor signup) ---
-      // const res = await fetch("/api/doctor/signup", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     name:             form.name,
-      //     email:            form.email,
-      //     phone:            form.phone,
-      //     specialization:   form.specialization,
-      //     consultation_fee: Number(form.consultation_fee),
-      //     password:         form.password,
-      //   }),
-      // });
-      // if (!res.ok) throw new Error("Signup failed. Email may already be in use.");
-      // const data = await res.json();
-      // localStorage.setItem("token", data.token);
+      const res = await fetch("http://localhost:3001/api/doctor/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name:             form.name,
+          email:            form.email,
+          phone:            form.phone,
+          specialization:   form.specialization,
+          consultation_fee: Number(form.consultation_fee),
+          password:         form.password,
+        }),
+      });
+      if (!res.ok) throw new Error("Signup failed. Email may already be in use.");
+      const data = await res.json();
+      sessionStorage.setItem("token", data.token);
 
-      // Mock — remove when API is connected
-      await new Promise((r) => setTimeout(r, 500));
-      navigate("/patients");
+      navigate("/");
     } catch (err) {
       setError(err.message || "Signup failed.");
     } finally {
@@ -156,26 +153,25 @@ function PatientSignupForm() {
     setLoading(true);
     try {
       // --- API REQUEST (POST patient signup) ---
-      // const res = await fetch("/api/patient/signup", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     name:        form.name,
-      //     age:         Number(form.age),
-      //     gender:      form.gender,
-      //     blood_group: form.blood_group,
-      //     phone:       form.phone,
-      //     email:       form.email,
-      //     password:    form.password,
-      //   }),
-      // });
-      // if (!res.ok) throw new Error("Signup failed. Email may already be in use.");
-      // const data = await res.json();
-      // localStorage.setItem("token", data.token);
+      const res = await fetch("http://localhost:3001/api/patient/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name:        form.name,
+          age:         Number(form.age),
+          gender:      form.gender,
+          blood_group: form.blood_group,
+          phone:       form.phone,
+          email:       form.email,
+          password:    form.password,
+        }),
+      });
+      if (!res.ok) throw new Error("Signup failed. Email may already be in use.");
+      const data = await res.json();
+      sessionStorage.setItem("token", data.token);
 
-      // Mock — remove when API is connected
-      await new Promise((r) => setTimeout(r, 500));
-      navigate("/dashboard");
+
+      navigate("/");
     } catch (err) {
       setError(err.message || "Signup failed.");
     } finally {

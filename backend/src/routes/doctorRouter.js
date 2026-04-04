@@ -6,6 +6,8 @@ const verifyToken = require('../routes/Auth').verifyToken;
 
 //loign
 doctorRouter.post('/login', doctorController.doctorLogin);
+//signup
+doctorRouter.post("/signup", doctorController.signup);
 
 //profile - section
 doctorRouter.get('/profile',verifyToken,doctorController.getProfileInfo);
@@ -21,6 +23,10 @@ doctorRouter.post("/consultation",verifyToken,doctorController.createConsultatio
 doctorRouter.get('/schedule',verifyToken,doctorController.getSchedule);
 doctorRouter.post("/postschedule",verifyToken,doctorController.postSchedule);
 doctorRouter.delete("/schedule/:id", verifyToken, doctorController.deleteSchedule);
+
+//bill
+doctorRouter.get('/billList',verifyToken,doctorController.getBillList);
+doctorRouter.get('/payCheck',verifyToken,doctorController.upPayCheck);
 
 
 

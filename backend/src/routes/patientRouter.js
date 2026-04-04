@@ -6,6 +6,8 @@ const { verifyPatient } = require('./PatientAuth');
 
 //login
 patientRouter.post('/login',patientController.loginPatient);
+//signup
+patientRouter.post("/signup", patientController.signup);
 
 patientRouter.get('/profile',verifyPatient,patientController.getProfileInfo);
 patientRouter.post('/update',verifyPatient,patientController.editProfile);

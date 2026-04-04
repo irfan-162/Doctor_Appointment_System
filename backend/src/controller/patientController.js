@@ -3,6 +3,47 @@ const jwt = require("jsonwebtoken");
 const db = require ('../config/db');
 require('dotenv').config();
 
+exports.signup = async (req, res) => {
+  try {
+    const {
+      name,
+      age,
+      gender,
+      blood_group,
+      phone,
+      email,
+      password,
+    } = req.body;
+
+    // basic validation
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const result = await patientService.signup({
+      name,
+      age,
+      gender,
+      blood_group,
+      phone,
+      email,
+      password,
+    });
+
+    res.status(201).json(result);
+  } catch (err) {
+    console.error(err);
+
+    if (err.message === "EMAIL_EXISTS") {
+      return res.status(400).json({
+        message: "Signup failed. Email may already be in use.",
+      });
+    }
+
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
 
 exports.getProfileInfo = async(req,res) =>{
   console.log("gettingProfileInfo in controller" + req.user.patient_id);

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { MdEdit, MdSend } from "react-icons/md";
+import PatientSummaryCard from "./PatientSummaryCard";
 
 export default function Profile() {
   const [patient, setPatient] = useState(null);
@@ -173,31 +174,7 @@ export default function Profile() {
       </div>
 
       {/* Smart cards unchanged */}
-      <div className="smartCardContainer">
-        <div className="smartCard">
-          <p className="cardTitle">Most Visited Specialist</p>
-          <h4 className="cardMain">
-            Cardiologist <span>(12)</span>
-          </h4>
-        </div>
-
-        <div className="smartCard">
-          <p className="cardTitle">Recent Appointment Notes</p>
-          <p className="cardText">
-            Blood pressure improving. Continue medication and follow diet plan.
-          </p>
-        </div>
-
-        <div className="smartCard">
-          <p className="cardTitle">Prescription</p>
-          <p className="cardText">Atenolol 50mg daily</p>
-        </div>
-
-        <div className="smartCard">
-          <p className="cardTitle">Recent Treatment</p>
-          <p className="cardText">Routine BP Monitoring</p>
-        </div>
-      </div>
+      <PatientSummaryCard />
     </div>
   );
 }

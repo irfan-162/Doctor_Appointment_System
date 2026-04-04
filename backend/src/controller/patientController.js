@@ -118,7 +118,7 @@ try {
 exports.getRecordList = async(req,res) =>{
   console.log("getting record list");
 try {
-    const result = await patientService.fetchRecordList(req.query.patientID);
+    const result = await patientService.fetchRecordList(req.user.patient_id);
     res.status(200).json(result);
 } catch (error) {
   res.status(500).json({error : "Failed to fetch profile infos"})
@@ -250,3 +250,14 @@ exports.loginPatient = async (req, res) => {
     res.status(500).json({ error: "Login failed" });
   }
 };
+
+exports.getSummary = async(req,res) =>{
+  console.log("getting summery...");
+  try {
+      const result = await patientService.fetchSummary(req.user.patient_id);
+      res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json({error : "Failed to fetch profile infos"})
+    
+  }
+}

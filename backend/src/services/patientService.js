@@ -202,6 +202,7 @@ ORDER BY a.appointment_date, a.appointment_time;
 };
 
 exports.fetchRecordList = async(id) =>{
+  console.log('id is ',id);
 
   const info = await db.query(
     `
@@ -217,6 +218,7 @@ ON a.appointment_id = mr.appointment_id
 JOIN doctor d
 ON a.doctor_id = d.doctor_id
 WHERE a.patient_id = $1
+ORDER BY a.appointment_date DESC
     `,
     [id]
   );
@@ -299,7 +301,7 @@ exports.fetchBillPending = async(id) =>{
       ON dr.doctor_id = a.doctor_id
       JOIN bill b
       ON a.appointment_id = b.appointment_id
-      WHERE a.patient_id = $1 AND b.payment_status = 'pending'
+      WHERE a.patient_id = $1 AND b.payment_status = 'Pending'
       `,
       [id]
     );
@@ -336,5 +338,24 @@ exports.deleteAppointment = async (id) => {
     return result.rows[0]; 
   } catch (error) {
     throw error;
+  }
+};
+
+exports.fetchSummary = async (id) => {
+  try {
+    console.log('fetching...');
+
+    const info = await db.query(
+      `
+      SELECT * FROM get_patient_summary($1);
+      `,
+      [id]
+    );
+    console.log(info.rows);
+    return info.rows[0];
+
+  } catch (err) {
+    console.error("Error in fetchSummary:", err);
+    throw err;
   }
 };

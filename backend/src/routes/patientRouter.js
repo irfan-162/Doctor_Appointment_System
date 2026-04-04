@@ -36,5 +36,8 @@ patientRouter.get('/schedule',verifyPatient,patientController.getSchedule);
 patientRouter.get('/scheduleID',verifyPatient,patientController.getScheduleID);
 patientRouter.post('/bookAppointment',verifyPatient,patientController.AppointmentBooking);
 
+//get-summery
+patientRouter.get('/summary',verifyPatient,patientController.getSummary);
+
 
 module.exports = patientRouter; 

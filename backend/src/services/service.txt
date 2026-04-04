@@ -1,0 +1,89 @@
+//PROCEDURE
+CREATE OR REPLACE PROCEDURE "public"."completebillbyappointment"("p_appointment_id" int4)
+ AS $BODY$
+BEGIN
+    
+    UPDATE BILL 
+    SET payment_status = 'Paid', 
+        bill_date = CURRENT_DATE 
+    WHERE appointment_id = p_appointment_id 
+      AND payment_status = 'Pending';
+
+    
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'No pending bill found for Appointment ID %', p_appointment_id;
+    END IF;
+
+ 
+    UPDATE APPOINTMENT 
+    SET status = 'Completed' 
+    WHERE appointment_id = p_appointment_id;
+
+    COMMIT;
+    RAISE NOTICE 'Bill for Appointment % has been successfully paid.', p_appointment_id;
+    
+END;
+$BODY$
+  LANGUAGE plpgsql
+
+
+
+
+//trigger
+
+CREATE OR REPLACE FUNCTION "public"."fn_create_bill_on_record"()
+  RETURNS "pg_catalog"."trigger" AS $BODY$
+DECLARE
+    v_doc_id INT;
+    v_fee NUMERIC;
+BEGIN
+   
+    SELECT D.doctor_id, D.consultation_fee 
+    INTO v_doc_id, v_fee 
+    FROM DOCTOR D
+    JOIN APPOINTMENT A ON D.doctor_id = A.doctor_id
+    WHERE A.appointment_id = NEW.appointment_id;
+
+  
+    INSERT INTO BILL (Amount, Payment_Status, Bill_Date, doctor_id, appointment_ID)
+    VALUES (v_fee, 'Pending', CURRENT_DATE, v_doc_id, NEW.appointment_id);
+
+    RETURN NEW;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+
+
+//FUNCTION
+
+CREATE OR REPLACE FUNCTION "public"."get_patient_summary"("pid" int4)
+  RETURNS TABLE("total_visits" int4, "last_visit" date, "total_medicines" int4, "common_diagnosis" text) AS $BODY$
+BEGIN
+  RETURN QUERY
+  SELECT 
+    COUNT(a.appointment_id)::INT AS total_visits,
+
+    MAX(a.appointment_date) AS last_visit,
+
+    COUNT(pr.prescription_id)::INT AS total_medicines,
+
+    (
+      SELECT m.diagnosis
+      FROM medical_record m
+      JOIN appointment a2 ON m.appointment_id = a2.appointment_id
+      WHERE a2.patient_id = pid
+      GROUP BY m.diagnosis
+      ORDER BY COUNT(*) DESC
+      LIMIT 1
+    ) AS common_diagnosis
+
+  FROM appointment a
+  LEFT JOIN medical_record m ON a.appointment_id = m.appointment_id
+  LEFT JOIN prescription pr ON m.record_id = pr.record_id
+  WHERE a.patient_id = pid;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000
